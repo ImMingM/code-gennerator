@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BaseMapper">
+    <sql id="BaseQuery">
+        <if test="items != null ">
+            where 1 = 1
+            <foreach collection="items" item="item" index="index"
+                     separator=" ">
+                <if test="item.type == 'eq' ">
+                    AND ${item.fieldName} = #{item.value}
+                </if>
+                <if test="item.type == 'lt' ">
+                    <![CDATA[  AND ${item.fieldName} < #{item.value} ]]>
+                </if>
+                <if test="item.type == 'lte' ">
+                    <![CDATA[ AND ${item.fieldName} <= #{item.value} ]]>
+                </if>
+                <if test="item.type == 'gt' ">
+                    <![CDATA[  AND ${item.fieldName} > #{item.value} ]]>
+                </if>
+                <if test="item.type == 'gte' ">
+                    <![CDATA[  AND ${item.fieldName} >= #{item.value} ]]>
+                </if>
+                <if test="item.type == 'slike' ">
+                    <![CDATA[  AND ${item.fieldName} like '${item.value}%' ]]>
+                </if>
+                <if test="item.type == 'elike' ">
+                    <![CDATA[  AND ${item.fieldName} like '%${item.value}' ]]>
+                </if>
+                <if test="item.type == 'like' ">
+                    <![CDATA[  AND ${item.fieldName} like '%${item.value}%' ]]>
+                </if>
+                <if test="item.type == 'in' ">
+                    AND ${item.fieldName} in
+                    <foreach collection="item.values" item="value" index="index" open="(" close=")" separator=",">
+                        #{value}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="BaseOrder">
+        <if test="orders != null ">
+            ORDER BY 
+            <foreach collection="orders" item="order" index="index" separator=",">
+               ${order.fieldName} ${order.type}
+            </foreach>
+        </if>
+    </sql>
+</mapper>
